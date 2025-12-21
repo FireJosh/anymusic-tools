@@ -368,6 +368,8 @@ def shorten_url():
             'short': short_url
         })
         
+    except ImportError:
+        return jsonify({'error': '短網址功能需要安裝 pyshorteners 套件。請執行: pip install pyshorteners'}), 500
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -409,7 +411,9 @@ def remove_background():
             as_attachment=True,
             download_name=f"nobg_{filename.rsplit('.', 1)[0]}.png"
         )
-        
+    
+    except ImportError:
+        return jsonify({'error': '圖片去背功能需要安裝 rembg 套件。請執行: pip install rembg'}), 500
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     finally:
