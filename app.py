@@ -349,7 +349,7 @@ def download_qrcode():
 
 @app.route('/api/shorten', methods=['POST'])
 def shorten_url():
-    """縮短網址"""
+    """縮短網址 - 使用 TinyURL API"""
     data = request.get_json()
     url = data.get('url', '')
     
@@ -357,10 +357,14 @@ def shorten_url():
         return jsonify({'error': '請輸入網址'}), 400
     
     try:
-        import pyshorteners
+        import urllib.request
+        import urllib.parse
         
-        s = pyshorteners.Shortener()
-        short_url = s.tinyurl.short(url)
+        # 使用 TinyURL API (無需額外套件)
+        api_url = f"http://tinyurl.com/api-create.php?url={urllib.parse.quote(url, safe='')}"
+        
+        with urllib.request.urlopen(api_url, timeout=10) as response:
+            short_url = response.read().decode('utf-8')
         
         return jsonify({
             'success': True,
@@ -368,10 +372,8 @@ def shorten_url():
             'short': short_url
         })
         
-    except ImportError:
-        return jsonify({'error': '短網址功能需要安裝 pyshorteners 套件。請執行: pip install pyshorteners'}), 500
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': f'無法產生短網址: {str(e)}'}), 500
 
 # ============ Image Tools ============
 
