@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnyMusic to MP3 下載器</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- 背景動畫 -->
+        <div class="bg-animation">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+        </div>
+
+        <!-- 導航列 -->
+        <nav class="navbar">
+            <a href="/" class="nav-brand">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18V5l12-2v13" />
+                    <circle cx="6" cy="18" r="3" />
+                    <circle cx="18" cy="16" r="3" />
+                </svg>
+                AnyMusic
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link active">音訊工具</a>
+                <a href="/pdf" class="nav-link">PDF 編輯</a>
+                <a href="/qrcode" class="nav-link">QR Code</a>
+                <a href="/tools" class="nav-link">更多工具</a>
+            </div>
+        </nav>
+
+        <!-- 主要內容 -->
+        <main class="main-content">
+            <header class="header">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 18V5l12-2v13" />
+                        <circle cx="6" cy="18" r="3" />
+                        <circle cx="18" cy="16" r="3" />
+                    </svg>
+                    <h1>AnyMusic to MP3</h1>
+                </div>
+                <p class="subtitle">快速將影片轉為 MP3 音訊檔案</p>
+            </header>
+
+            <div class="card">
+                <div class="input-group">
+                    <input type="text" id="url-input" placeholder="貼上影片網址..." autocomplete="off">
+                    <div class="input-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="toggle-group">
+                    <label class="toggle">
+                        <input type="radio" name="download-type" value="single" checked>
+                        <span class="toggle-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3" />
+                            </svg>
+                            單一影片
+                        </span>
+                    </label>
+                    <label class="toggle">
+                        <input type="radio" name="download-type" value="playlist">
+                        <span class="toggle-label">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="8" y1="6" x2="21" y2="6" />
+                                <line x1="8" y1="12" x2="21" y2="12" />
+                                <line x1="8" y1="18" x2="21" y2="18" />
+                                <line x1="3" y1="6" x2="3.01" y2="6" />
+                                <line x1="3" y1="12" x2="3.01" y2="12" />
+                                <line x1="3" y1="18" x2="3.01" y2="18" />
+                            </svg>
+                            播放清單
+                        </span>
+                    </label>
+                </div>
+
+                <button id="download-btn" class="download-btn">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    <span>開始下載</span>
+                </button>
+            </div>
+
+            <!-- 進度區域 -->
+            <div id="progress-section" class="progress-section hidden">
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <span id="progress-title">下載中...</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                    <p id="progress-status" class="progress-status">準備中...</p>
+                </div>
+            </div>
+
+            <!-- 下載結果 -->
+            <div id="results-section" class="results-section hidden">
+                <h2 class="results-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    下載完成
+                </h2>
+                <div id="file-list" class="file-list"></div>
+            </div>
+
+            <!-- 音訊切割區域 -->
+            <div id="trimmer-section" class="trimmer-section">
+                <div class="card trimmer-card">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="6" cy="6" r="3" />
+                            <circle cx="6" cy="18" r="3" />
+                            <line x1="20" y1="4" x2="8.12" y2="15.88" />
+                            <line x1="14.47" y1="14.48" x2="20" y2="20" />
+                            <line x1="8.12" y1="8.12" x2="12" y2="12" />
+                        </svg>
+                        音訊切割工具
+                    </h2>
+
+                    <div class="upload-area" id="upload-area">
+                        <input type="file" id="audio-file" accept="audio/*" hidden>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        <p>點擊或拖拽上傳音訊檔案</p>
+                        <span class="upload-hint">支援 MP3, WAV, M4A 等格式</span>
+                    </div>
+
+                    <div id="trimmer-controls" class="trimmer-controls hidden">
+                        <div class="audio-info">
+                            <span id="audio-name" class="audio-name">檔案名稱</span>
+                            <span id="audio-duration" class="audio-duration">00:00</span>
+                        </div>
+
+                        <div class="waveform-container">
+                            <div id="waveform" class="waveform"></div>
+                            <div class="time-markers">
+                                <span id="current-time">00:00</span>
+                                <span id="total-time">00:00</span>
+                            </div>
+                        </div>
+
+                        <div class="audio-player">
+                            <button id="play-btn" class="play-btn">
+                                <svg id="play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3" />
+                                </svg>
+                            </button>
+                            <div class="audio-slider-container">
+                                <input type="range" id="audio-slider" class="audio-slider" min="0" max="100" value="0">
+                            </div>
+                        </div>
+
+                        <div class="trim-range">
+                            <div class="time-input-group">
+                                <label>開始時間</label>
+                                <div class="time-inputs">
+                                    <input type="number" id="start-min" class="time-input" min="0" value="0"
+                                        placeholder="分">
+                                    <span>:</span>
+                                    <input type="number" id="start-sec" class="time-input" min="0" max="59" value="0"
+                                        placeholder="秒">
+                                </div>
+                            </div>
+                            <div class="range-separator">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                    <polyline points="12 5 19 12 12 19" />
+                                </svg>
+                            </div>
+                            <div class="time-input-group">
+                                <label>結束時間</label>
+                                <div class="time-inputs">
+                                    <input type="number" id="end-min" class="time-input" min="0" value="0"
+                                        placeholder="分">
+                                    <span>:</span>
+                                    <input type="number" id="end-sec" class="time-input" min="0" max="59" value="0"
+                                        placeholder="秒">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="trim-btn" class="download-btn trim-btn">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="6" cy="6" r="3" />
+                                <circle cx="6" cy="18" r="3" />
+                                <line x1="20" y1="4" x2="8.12" y2="15.88" />
+                                <line x1="14.47" y1="14.48" x2="20" y2="20" />
+                                <line x1="8.12" y1="8.12" x2="12" y2="12" />
+                            </svg>
+                            <span>切割並下載</span>
+                        </button>
+                    </div>
+
+                    <!-- 切割進度 -->
+                    <div id="trim-progress" class="trim-progress hidden">
+                        <div class="progress-bar">
+                            <div id="trim-progress-fill" class="progress-fill"></div>
+                        </div>
+                        <p id="trim-status">處理中...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="error-section" class="error-section hidden">
+                <div class="error-card">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <p id="error-message">發生錯誤</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Made with ❤️ for music lovers</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+
+</html>

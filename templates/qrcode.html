@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code 產生器 | AnyMusic</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/pdf.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .qr-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .qr-image {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .qr-image img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .qr-placeholder {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .short-url-result {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+        }
+
+        .short-url-result input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--accent-secondary);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .copy-btn {
+            padding: 0.5rem 1rem;
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-gradient);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="bg-animation">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+        </div>
+
+        <nav class="navbar">
+            <a href="/" class="nav-brand">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18V5l12-2v13" />
+                    <circle cx="6" cy="18" r="3" />
+                    <circle cx="18" cy="16" r="3" />
+                </svg>
+                AnyMusic
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">音訊工具</a>
+                <a href="/pdf" class="nav-link">PDF 編輯</a>
+                <a href="/qrcode" class="nav-link active">QR Code</a>
+                <a href="/tools" class="nav-link">更多工具</a>
+            </div>
+        </nav>
+
+        <main class="main-content pdf-main">
+            <header class="header">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                    </svg>
+                    <h1>QR Code & 短網址</h1>
+                </div>
+                <p class="subtitle">快速產生 QR Code 和縮短網址</p>
+            </header>
+
+            <div class="card" style="max-width: 500px;">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="qrcode">QR Code</button>
+                    <button class="tab-btn" data-tab="shorturl">短網址</button>
+                </div>
+
+                <!-- QR Code Tab -->
+                <div id="qrcode-tab" class="tab-content active">
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <input type="text" id="qr-content" placeholder="輸入文字或網址..." autocomplete="off">
+                        <div class="input-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7" />
+                                <rect x="14" y="3" width="7" height="7" />
+                                <rect x="3" y="14" width="7" height="7" />
+                                <rect x="14" y="14" width="7" height="7" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <button id="generate-qr-btn" class="download-btn" style="margin-top: 1rem;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                        </svg>
+                        <span>產生 QR Code</span>
+                    </button>
+
+                    <div class="qr-preview">
+                        <div class="qr-image" id="qr-image">
+                            <span class="qr-placeholder">QR Code 將顯示在這裡</span>
+                        </div>
+                        <button id="download-qr-btn" class="action-btn" style="display: none; max-width: 200px;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                            下載 QR Code
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Short URL Tab -->
+                <div id="shorturl-tab" class="tab-content">
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <input type="url" id="long-url" placeholder="輸入要縮短的網址..." autocomplete="off">
+                        <div class="input-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <button id="shorten-btn" class="download-btn" style="margin-top: 1rem;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                        </svg>
+                        <span>產生短網址</span>
+                    </button>
+
+                    <div id="short-url-result" class="short-url-result" style="display: none;">
+                        <input type="text" id="short-url-output" readonly>
+                        <button class="copy-btn" id="copy-btn">複製</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="error-section" class="error-section hidden" style="max-width: 500px;">
+                <div class="error-card">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <p id="error-message">發生錯誤</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Made with ❤️ for productivity</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tabs
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.getElementById(`${btn.dataset.tab}-tab`).classList.add('active');
+            });
+        });
+
+        // QR Code
+        const qrContent = document.getElementById('qr-content');
+        const generateQrBtn = document.getElementById('generate-qr-btn');
+        const qrImage = document.getElementById('qr-image');
+        const downloadQrBtn = document.getElementById('download-qr-btn');
+        const errorSection = document.getElementById('error-section');
+        const errorMessage = document.getElementById('error-message');
+
+        generateQrBtn.addEventListener('click', async () => {
+            const content = qrContent.value.trim();
+            if (!content) {
+                showError('請輸入內容');
+                return;
+            }
+
+            hideError();
+            generateQrBtn.disabled = true;
+            generateQrBtn.querySelector('span').textContent = '產生中...';
+
+            try {
+                const response = await fetch('/api/qrcode', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || '產生失敗');
+                }
+
+                qrImage.innerHTML = `<img src="${data.image}" alt="QR Code">`;
+                downloadQrBtn.style.display = 'flex';
+
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                generateQrBtn.disabled = false;
+                generateQrBtn.querySelector('span').textContent = '產生 QR Code';
+            }
+        });
+
+        downloadQrBtn.addEventListener('click', async () => {
+            const content = qrContent.value.trim();
+            if (!content) return;
+
+            try {
+                const response = await fetch('/api/qrcode/download', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || '下載失敗');
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'qrcode.png';
+                a.click();
+                URL.revokeObjectURL(url);
+
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+
+        // Short URL
+        const longUrl = document.getElementById('long-url');
+        const shortenBtn = document.getElementById('shorten-btn');
+        const shortUrlResult = document.getElementById('short-url-result');
+        const shortUrlOutput = document.getElementById('short-url-output');
+        const copyBtn = document.getElementById('copy-btn');
+
+        shortenBtn.addEventListener('click', async () => {
+            const url = longUrl.value.trim();
+            if (!url) {
+                showError('請輸入網址');
+                return;
+            }
+
+            hideError();
+            shortenBtn.disabled = true;
+            shortenBtn.querySelector('span').textContent = '產生中...';
+
+            try {
+                const response = await fetch('/api/shorten', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || '產生失敗');
+                }
+
+                shortUrlOutput.value = data.short;
+                shortUrlResult.style.display = 'flex';
+
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                shortenBtn.disabled = false;
+                shortenBtn.querySelector('span').textContent = '產生短網址';
+            }
+        });
+
+        copyBtn.addEventListener('click', () => {
+            shortUrlOutput.select();
+            document.execCommand('copy');
+            copyBtn.textContent = '已複製!';
+            setTimeout(() => {
+                copyBtn.textContent = '複製';
+            }, 2000);
+        });
+
+        function showError(msg) {
+            errorMessage.textContent = msg;
+            errorSection.classList.remove('hidden');
+        }
+
+        function hideError() {
+            errorSection.classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>

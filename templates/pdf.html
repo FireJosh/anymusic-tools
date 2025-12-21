@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF 編輯器 | AnyMusic</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/pdf.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <!-- 背景動畫 -->
+        <div class="bg-animation">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+        </div>
+
+        <!-- 導航列 -->
+        <nav class="navbar">
+            <a href="/" class="nav-brand">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18V5l12-2v13" />
+                    <circle cx="6" cy="18" r="3" />
+                    <circle cx="18" cy="16" r="3" />
+                </svg>
+                AnyMusic
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">音訊轉檔</a>
+                <a href="/pdf" class="nav-link active">PDF 編輯</a>
+            </div>
+        </nav>
+
+        <!-- 主要內容 -->
+        <main class="main-content pdf-main">
+            <header class="header">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                        <polyline points="10 9 9 9 8 9" />
+                    </svg>
+                    <h1>PDF 編輯器</h1>
+                </div>
+                <p class="subtitle">專業的 PDF 處理工具，滿足您的所有需求</p>
+            </header>
+
+            <!-- 工具卡片網格 -->
+            <div class="tool-grid">
+                <!-- 合併 PDF -->
+                <div class="tool-card" data-tool="merge">
+                    <div class="tool-icon merge-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="8" height="10" rx="1" />
+                            <rect x="14" y="3" width="8" height="10" rx="1" />
+                            <path d="M12 17v4" />
+                            <path d="M8 21h8" />
+                        </svg>
+                    </div>
+                    <h3>合併 PDF</h3>
+                    <p>將多個 PDF 合併為一個檔案</p>
+                </div>
+
+                <!-- 分割 PDF -->
+                <div class="tool-card" data-tool="split">
+                    <div class="tool-icon split-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="18" rx="2" />
+                            <line x1="12" y1="3" x2="12" y2="21" />
+                        </svg>
+                    </div>
+                    <h3>分割 PDF</h3>
+                    <p>擷取特定頁面為新的 PDF</p>
+                </div>
+
+                <!-- 旋轉 PDF -->
+                <div class="tool-card" data-tool="rotate">
+                    <div class="tool-icon rotate-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21.5 2v6h-6" />
+                            <path d="M21.34 15.57a10 10 0 1 1-.57-8.38" />
+                        </svg>
+                    </div>
+                    <h3>旋轉 PDF</h3>
+                    <p>旋轉 PDF 頁面方向</p>
+                </div>
+
+                <!-- 刪除頁面 -->
+                <div class="tool-card" data-tool="delete">
+                    <div class="tool-icon delete-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                            <line x1="10" y1="11" x2="10" y2="17" />
+                            <line x1="14" y1="11" x2="14" y2="17" />
+                        </svg>
+                    </div>
+                    <h3>刪除頁面</h3>
+                    <p>移除不需要的頁面</p>
+                </div>
+
+                <!-- 擷取頁面 -->
+                <div class="tool-card" data-tool="extract">
+                    <div class="tool-icon extract-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                    </div>
+                    <h3>擷取頁面</h3>
+                    <p>提取特定頁面出來</p>
+                </div>
+
+                <!-- 組織 PDF -->
+                <div class="tool-card" data-tool="organize">
+                    <div class="tool-icon organize-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6" />
+                            <line x1="8" y1="12" x2="21" y2="12" />
+                            <line x1="8" y1="18" x2="21" y2="18" />
+                            <line x1="3" y1="6" x2="3.01" y2="6" />
+                            <line x1="3" y1="12" x2="3.01" y2="12" />
+                            <line x1="3" y1="18" x2="3.01" y2="18" />
+                        </svg>
+                    </div>
+                    <h3>組織 PDF</h3>
+                    <p>重新排列頁面順序</p>
+                </div>
+            </div>
+
+            <!-- 工具操作面板 -->
+            <div id="tool-panel" class="tool-panel hidden">
+                <button class="back-btn" id="back-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12" />
+                        <polyline points="12 19 5 12 12 5" />
+                    </svg>
+                    返回
+                </button>
+
+                <!-- 合併 PDF 面板 -->
+                <div id="merge-panel" class="operation-panel hidden">
+                    <h2 class="panel-title">合併 PDF</h2>
+                    <div class="upload-area" id="merge-upload">
+                        <input type="file" id="merge-files" accept=".pdf" multiple hidden>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        <p>拖拽或點擊上傳多個 PDF 檔案</p>
+                        <span class="upload-hint">將依照順序合併</span>
+                    </div>
+                    <div id="merge-file-list" class="file-list-preview"></div>
+                    <button id="merge-btn" class="action-btn" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="8" height="10" rx="1" />
+                            <rect x="14" y="3" width="8" height="10" rx="1" />
+                            <path d="M12 17v4" />
+                            <path d="M8 21h8" />
+                        </svg>
+                        合併 PDF
+                    </button>
+                </div>
+
+                <!-- 分割 PDF 面板 -->
+                <div id="split-panel" class="operation-panel hidden">
+                    <h2 class="panel-title">分割 / 擷取 PDF</h2>
+                    <div class="upload-area" id="split-upload">
+                        <input type="file" id="split-file" accept=".pdf" hidden>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        <p>上傳要分割的 PDF 檔案</p>
+                    </div>
+                    <div id="split-options" class="options-group hidden">
+                        <label>選擇要擷取的頁碼</label>
+                        <input type="text" id="split-pages" class="text-input" placeholder="例如: 1-3, 5, 7-9">
+                        <span class="input-hint">留空則擷取全部頁面</span>
+                    </div>
+                    <button id="split-btn" class="action-btn" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="18" rx="2" />
+                            <line x1="12" y1="3" x2="12" y2="21" />
+                        </svg>
+                        擷取頁面
+                    </button>
+                </div>
+
+                <!-- 旋轉 PDF 面板 -->
+                <div id="rotate-panel" class="operation-panel hidden">
+                    <h2 class="panel-title">旋轉 PDF</h2>
+                    <div class="upload-area" id="rotate-upload">
+                        <input type="file" id="rotate-file" accept=".pdf" hidden>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        <p>上傳要旋轉的 PDF 檔案</p>
+                    </div>
+                    <div id="rotate-options" class="options-group hidden">
+                        <label>旋轉角度</label>
+                        <div class="rotation-buttons">
+                            <button class="rotation-btn active" data-rotation="90">90°</button>
+                            <button class="rotation-btn" data-rotation="180">180°</button>
+                            <button class="rotation-btn" data-rotation="270">270°</button>
+                        </div>
+                        <label>套用至頁面</label>
+                        <input type="text" id="rotate-pages" class="text-input" placeholder="全部 或 1, 2, 3">
+                    </div>
+                    <button id="rotate-btn" class="action-btn" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21.5 2v6h-6" />
+                            <path d="M21.34 15.57a10 10 0 1 1-.57-8.38" />
+                        </svg>
+                        旋轉 PDF
+                    </button>
+                </div>
+
+                <!-- 刪除頁面面板 -->
+                <div id="delete-panel" class="operation-panel hidden">
+                    <h2 class="panel-title">刪除 PDF 頁面</h2>
+                    <div class="upload-area" id="delete-upload">
+                        <input type="file" id="delete-file" accept=".pdf" hidden>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        <p>上傳 PDF 檔案</p>
+                    </div>
+                    <div id="delete-options" class="options-group hidden">
+                        <label>要刪除的頁碼</label>
+                        <input type="text" id="delete-pages" class="text-input" placeholder="例如: 1, 3, 5">
+                    </div>
+                    <button id="delete-btn" class="action-btn delete" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
+                        刪除頁面
+                    </button>
+                </div>
+
+                <!-- 進度指示 -->
+                <div id="pdf-progress" class="pdf-progress hidden">
+                    <div class="progress-bar">
+                        <div id="pdf-progress-fill" class="progress-fill"></div>
+                    </div>
+                    <p id="pdf-status">處理中...</p>
+                </div>
+            </div>
+
+            <!-- 錯誤訊息 -->
+            <div id="pdf-error" class="error-section hidden">
+                <div class="error-card">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <p id="pdf-error-message">發生錯誤</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Made with ❤️ for productivity</p>
+        </footer>
+    </div>
+
+    <script src="/static/pdf.js"></script>
+</body>
+
+</html>

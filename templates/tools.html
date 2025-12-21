@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更多工具 | AnyMusic</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/pdf.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .textarea-input {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .textarea-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-label:has(input:checked) {
+            background: rgba(124, 58, 237, 0.2);
+            border-color: var(--accent-primary);
+        }
+
+        .checkbox-label input {
+            display: none;
+        }
+
+        .result-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .result-box h4 {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-box pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        .masked-item {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background: rgba(239, 68, 68, 0.2);
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin: 0.25rem;
+        }
+
+        .image-preview {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .image-box {
+            flex: 1;
+            aspect-ratio: 1;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .image-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .image-box-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="bg-animation">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+        </div>
+
+        <nav class="navbar">
+            <a href="/" class="nav-brand">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18V5l12-2v13" />
+                    <circle cx="6" cy="18" r="3" />
+                    <circle cx="18" cy="16" r="3" />
+                </svg>
+                AnyMusic
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">音訊工具</a>
+                <a href="/pdf" class="nav-link">PDF 編輯</a>
+                <a href="/qrcode" class="nav-link">QR Code</a>
+                <a href="/tools" class="nav-link active">更多工具</a>
+            </div>
+        </nav>
+
+        <main class="main-content pdf-main">
+            <header class="header">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                    <h1>更多工具</h1>
+                </div>
+                <p class="subtitle">實用的小工具集合</p>
+            </header>
+
+            <!-- 工具卡片網格 -->
+            <div class="tool-grid" id="tool-grid">
+                <!-- 圖片去背 -->
+                <div class="tool-card" data-tool="removebg">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <polyline points="21 15 16 10 5 21" />
+                        </svg>
+                    </div>
+                    <h3>圖片去背</h3>
+                    <p>一鍵移除圖片背景</p>
+                </div>
+
+                <!-- 敏感資訊遮蓋 -->
+                <div class="tool-card" data-tool="masking">
+                    <div class="tool-icon" style="background: linear-gradient(135deg, #ef4444 0%, #ec4899 100%);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                            <line x1="1" y1="1" x2="23" y2="23" />
+                        </svg>
+                    </div>
+                    <h3>敏感資訊遮蓋</h3>
+                    <p>自動遮蓋 Email、電話等</p>
+                </div>
+            </div>
+
+            <!-- 工具面板 -->
+            <div id="tool-panel" class="tool-panel hidden">
+                <button class="back-btn" id="back-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12" />
+                        <polyline points="12 19 5 12 12 5" />
+                    </svg>
+                    返回
+                </button>
+
+                <!-- 圖片去背面板 -->
+                <div id="removebg-panel" class="operation-panel hidden">
+                    <h2 class="panel-title">圖片去背</h2>
+                    <div class="upload-area" id="removebg-upload">
+                        <input type="file" id="removebg-file" accept="image/*" hidden>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        <p>上傳要去背的圖片</p>
+                        <span class="upload-hint">支援 JPG, PNG, WebP</span>
+                    </div>
+                    <div id="image-preview" class="image-preview hidden">
+                        <div class="image-box" id="original-image">
+                            <span class="image-box-label">原始圖片</span>
+                        </div>
+                    </div>
+                    <button id="removebg-btn" class="action-btn" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <circle cx="8.5" cy="8.5" r="1.5" />
+                            <polyline points="21 15 16 10 5 21" />
+                        </svg>
+                        移除背景並下載
+                    </button>
+                    <div id="removebg-progress" class="pdf-progress hidden">
+                        <div class="progress-bar">
+                            <div id="removebg-progress-fill" class="progress-fill"></div>
+                        </div>
+                        <p id="removebg-status">處理中... (首次使用需下載模型，可能較慢)</p>
+                    </div>
+                </div>
+
+                <!-- 敏感資訊遮蓋面板 -->
+                <div id="masking-panel" class="operation-panel hidden">
+                    <h2 class="panel-title">敏感資訊遮蓋</h2>
+                    <textarea id="mask-input" class="textarea-input" placeholder="貼上要處理的文字內容..."></textarea>
+
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="pattern" value="email" checked>
+                            Email
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="pattern" value="phone" checked>
+                            電話
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="pattern" value="id" checked>
+                            身分證
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="pattern" value="credit_card" checked>
+                            信用卡
+                        </label>
+                    </div>
+
+                    <button id="mask-btn" class="action-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                            <line x1="1" y1="1" x2="23" y2="23" />
+                        </svg>
+                        遮蓋敏感資訊
+                    </button>
+
+                    <div id="mask-result" class="result-box hidden">
+                        <h4>處理結果</h4>
+                        <pre id="mask-output"></pre>
+                        <div id="masked-items" style="margin-top: 1rem;"></div>
+                        <button id="copy-result-btn" class="copy-btn" style="margin-top: 1rem;">複製結果</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="error-section" class="error-section hidden" style="max-width: 500px;">
+                <div class="error-card">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    <p id="error-message">發生錯誤</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Made with ❤️ for productivity</p>
+        </footer>
+    </div>
+
+    <script>
+        const toolGrid = document.getElementById('tool-grid');
+        const toolPanel = document.getElementById('tool-panel');
+        const backBtn = document.getElementById('back-btn');
+        const errorSection = document.getElementById('error-section');
+        const errorMessage = document.getElementById('error-message');
+
+        let selectedFile = null;
+
+        // Tool cards
+        document.querySelectorAll('.tool-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const tool = card.dataset.tool;
+                showPanel(tool);
+            });
+        });
+
+        backBtn.addEventListener('click', hidePanel);
+
+        function showPanel(tool) {
+            toolGrid.classList.add('hidden');
+            toolPanel.classList.remove('hidden');
+            document.querySelectorAll('.operation-panel').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`${tool}-panel`).classList.remove('hidden');
+            hideError();
+        }
+
+        function hidePanel() {
+            toolGrid.classList.remove('hidden');
+            toolPanel.classList.add('hidden');
+            selectedFile = null;
+        }
+
+        // ========== Remove Background ==========
+        const removebgUpload = document.getElementById('removebg-upload');
+        const removebgFile = document.getElementById('removebg-file');
+        const removebgBtn = document.getElementById('removebg-btn');
+        const imagePreview = document.getElementById('image-preview');
+        const originalImage = document.getElementById('original-image');
+        const removebgProgress = document.getElementById('removebg-progress');
+        const removebgProgressFill = document.getElementById('removebg-progress-fill');
+
+        removebgUpload.addEventListener('click', () => removebgFile.click());
+
+        removebgUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            removebgUpload.classList.add('dragover');
+        });
+
+        removebgUpload.addEventListener('dragleave', () => {
+            removebgUpload.classList.remove('dragover');
+        });
+
+        removebgUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            removebgUpload.classList.remove('dragover');
+            if (e.dataTransfer.files[0]?.type.startsWith('image/')) {
+                handleImageFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        removebgFile.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                handleImageFile(e.target.files[0]);
+            }
+        });
+
+        function handleImageFile(file) {
+            selectedFile = file;
+            removebgUpload.querySelector('p').textContent = file.name;
+
+            // Preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                originalImage.innerHTML = `<img src="${e.target.result}" alt="Original">`;
+                imagePreview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+
+            removebgBtn.disabled = false;
+        }
+
+        removebgBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            removebgProgress.classList.remove('hidden');
+            removebgProgressFill.style.width = '30%';
+            removebgBtn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('image', selectedFile);
+
+                removebgProgressFill.style.width = '50%';
+
+                const response = await fetch('/api/remove-bg', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || '處理失敗');
+                }
+
+                removebgProgressFill.style.width = '90%';
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `nobg_${selectedFile.name.split('.')[0]}.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+
+                removebgProgressFill.style.width = '100%';
+                document.getElementById('removebg-status').textContent = '完成！';
+
+                setTimeout(() => {
+                    removebgProgress.classList.add('hidden');
+                    document.getElementById('removebg-status').textContent = '處理中...';
+                }, 2000);
+
+            } catch (error) {
+                showError(error.message);
+                removebgProgress.classList.add('hidden');
+            } finally {
+                removebgBtn.disabled = false;
+            }
+        });
+
+        // ========== Text Masking ==========
+        const maskInput = document.getElementById('mask-input');
+        const maskBtn = document.getElementById('mask-btn');
+        const maskResult = document.getElementById('mask-result');
+        const maskOutput = document.getElementById('mask-output');
+        const maskedItems = document.getElementById('masked-items');
+        const copyResultBtn = document.getElementById('copy-result-btn');
+
+        maskBtn.addEventListener('click', async () => {
+            const text = maskInput.value.trim();
+            if (!text) {
+                showError('請輸入文字');
+                return;
+            }
+
+            const patterns = Array.from(document.querySelectorAll('input[name="pattern"]:checked'))
+                .map(cb => cb.value);
+
+            maskBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/mask-text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, patterns })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || '處理失敗');
+                }
+
+                maskOutput.textContent = data.masked;
+
+                maskedItems.innerHTML = '';
+                if (data.items.length > 0) {
+                    maskedItems.innerHTML = '<h4 style="margin-bottom: 0.5rem; color: var(--text-secondary);">偵測到的敏感資訊:</h4>' +
+                        data.items.map(item =>
+                            `<span class="masked-item">${item.type}: ${item.original}</span>`
+                        ).join('');
+                }
+
+                maskResult.classList.remove('hidden');
+
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                maskBtn.disabled = false;
+            }
+        });
+
+        copyResultBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(maskOutput.textContent);
+            copyResultBtn.textContent = '已複製!';
+            setTimeout(() => {
+                copyResultBtn.textContent = '複製結果';
+            }, 2000);
+        });
+
+        function showError(msg) {
+            errorMessage.textContent = msg;
+            errorSection.classList.remove('hidden');
+        }
+
+        function hideError() {
+            errorSection.classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>
