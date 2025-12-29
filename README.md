@@ -8,6 +8,7 @@
 - YouTube/影片下載為 MP3
 - 播放清單批量下載
 - 音訊切割工具
+- 音訊格式轉換 (WAV, FLAC, OGG, M4A 等轉 MP3)
 
 ### 📄 PDF 編輯器
 - 合併多個 PDF

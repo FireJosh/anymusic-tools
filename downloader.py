@@ -13,6 +13,26 @@ def get_download_dir():
     download_dir.mkdir(exist_ok=True)
     return download_dir
 
+def get_cookies_file():
+    """取得 cookies 檔案路徑（如果存在）"""
+    cookies_file = Path(__file__).parent / "cookies.txt"
+    if cookies_file.exists():
+        return str(cookies_file)
+    return None
+
+def get_youtube_opts():
+    """取得 YouTube 下載選項（自動選擇認證方式）"""
+    opts = {}
+    
+    # 優先使用 cookies 檔案
+    cookies_file = get_cookies_file()
+    if cookies_file:
+        opts['cookiefile'] = cookies_file
+        print(f"[INFO] 使用 cookies 檔案: {cookies_file}")
+    # 否則使用 yt-dlp 預設模式（不加額外參數）
+    
+    return opts
+
 def progress_hook(task_id):
     """建立進度回調函數"""
     def hook(d):
@@ -43,6 +63,9 @@ def download_single(url, task_id):
     """下載單一影片為 MP3"""
     download_dir = get_download_dir()
     
+    # 取得 YouTube 認證選項
+    youtube_opts = get_youtube_opts()
+    
     ydl_opts = {
         'format': 'bestaudio/best',
         'postprocessors': [{
@@ -54,6 +77,7 @@ def download_single(url, task_id):
         'progress_hooks': [progress_hook(task_id)],
         'quiet': True,
         'no_warnings': True,
+        **youtube_opts,  # 套用認證選項
     }
     
     try:
@@ -77,6 +101,9 @@ def download_playlist(url, task_id):
     download_dir = get_download_dir()
     downloaded_files = []
     
+    # 取得 YouTube 認證選項
+    youtube_opts = get_youtube_opts()
+    
     ydl_opts = {
         'format': 'bestaudio/best',
         'postprocessors': [{
@@ -89,6 +116,7 @@ def download_playlist(url, task_id):
         'quiet': True,
         'no_warnings': True,
         'ignoreerrors': True,
+        **youtube_opts,  # 套用認證選項
     }
     
     try:

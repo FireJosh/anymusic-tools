@@ -229,6 +229,81 @@
                 </div>
             </div>
 
+            <!-- 音訊格式轉換區域 -->
+            <div id="converter-section" class="trimmer-section">
+                <div class="card trimmer-card">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 3v18" />
+                            <path d="M8 7l4-4 4 4" />
+                            <path d="M8 17l4 4 4-4" />
+                            <circle cx="4" cy="12" r="2" />
+                            <circle cx="20" cy="12" r="2" />
+                        </svg>
+                        轉換為 MP3
+                    </h2>
+                    <p class="section-desc">支援 WAV, FLAC, OGG, M4A, AAC, WMA, OPUS, 影片檔案等格式</p>
+
+                    <div class="upload-area" id="convert-upload-area">
+                        <input type="file" id="convert-file"
+                            accept="audio/*,video/*,.wav,.flac,.ogg,.m4a,.aac,.wma,.opus,.webm" hidden>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        <p>點擊或拖拽上傳音訊/影片檔案</p>
+                        <span class="upload-hint">支援 WAV, FLAC, M4A, OGG, MP4, MKV 等格式</span>
+                    </div>
+
+                    <div id="convert-controls" class="trimmer-controls hidden">
+                        <div class="audio-info">
+                            <span id="convert-name" class="audio-name">檔案名稱</span>
+                            <span id="convert-size" class="audio-duration">0 MB</span>
+                        </div>
+
+                        <div class="bitrate-select">
+                            <label>輸出品質 (Bitrate)</label>
+                            <div class="bitrate-options">
+                                <label class="toggle">
+                                    <input type="radio" name="bitrate" value="128">
+                                    <span class="toggle-label">128 kbps</span>
+                                </label>
+                                <label class="toggle">
+                                    <input type="radio" name="bitrate" value="192" checked>
+                                    <span class="toggle-label">192 kbps</span>
+                                </label>
+                                <label class="toggle">
+                                    <input type="radio" name="bitrate" value="256">
+                                    <span class="toggle-label">256 kbps</span>
+                                </label>
+                                <label class="toggle">
+                                    <input type="radio" name="bitrate" value="320">
+                                    <span class="toggle-label">320 kbps</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button id="convert-btn" class="download-btn">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 3v18" />
+                                <path d="M8 17l4 4 4-4" />
+                            </svg>
+                            <span>轉換為 MP3</span>
+                        </button>
+                    </div>
+
+                    <!-- 轉換進度 -->
+                    <div id="convert-progress" class="trim-progress hidden">
+                        <div class="progress-bar">
+                            <div id="convert-progress-fill" class="progress-fill converting"></div>
+                        </div>
+                        <p id="convert-status">轉換中...</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- 錯誤訊息 -->
             <div id="error-section" class="error-section hidden">
                 <div class="error-card">

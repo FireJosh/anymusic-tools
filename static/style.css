@@ -809,3 +809,61 @@ body {
     color: var(--text-secondary);
     margin-top: 0.5rem;
 }
+
+/* === Converter Section === */
+.section-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: -1rem;
+    margin-bottom: 1.5rem;
+}
+
+.bitrate-select {
+    margin-bottom: 1.5rem;
+}
+
+.bitrate-select>label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.bitrate-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+}
+
+.bitrate-options .toggle {
+    flex: none;
+}
+
+.bitrate-options .toggle-label {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+/* Converting animation */
+.progress-fill.converting {
+    animation: progress-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes progress-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Responsive for bitrate options */
+@media (max-width: 480px) {
+    .bitrate-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

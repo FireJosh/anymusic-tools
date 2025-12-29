@@ -99,6 +99,69 @@ def trim_audio():
             input_path.unlink()
         # output_path 會在送出後自動清理
 
+@app.route('/api/convert-to-mp3', methods=['POST'])
+def convert_to_mp3():
+    """將其他音訊格式轉換為 MP3"""
+    if 'audio' not in request.files:
+        return jsonify({'error': '請上傳音訊檔案'}), 400
+    
+    audio_file = request.files['audio']
+    bitrate = request.form.get('bitrate', '192')  # 預設 192kbps
+    
+    if not audio_file.filename:
+        return jsonify({'error': '請選擇檔案'}), 400
+    
+    # 支援的音訊格式
+    allowed_extensions = {'.wav', '.flac', '.ogg', '.m4a', '.aac', '.wma', '.opus', '.webm', '.mp4', '.avi', '.mkv', '.mov'}
+    file_ext = os.path.splitext(audio_file.filename)[1].lower()
+    
+    if file_ext not in allowed_extensions and file_ext != '.mp3':
+        return jsonify({'error': f'不支援的檔案格式: {file_ext}。支援格式: {", ".join(allowed_extensions)}'}), 400
+    
+    temp_dir = get_temp_dir()
+    filename = secure_filename(audio_file.filename)
+    input_path = temp_dir / f"input_{uuid.uuid4()}_{filename}"
+    
+    # 輸出檔名（改為 .mp3）
+    output_filename = os.path.splitext(filename)[0] + '.mp3'
+    output_path = temp_dir / f"converted_{uuid.uuid4()}_{output_filename}"
+    
+    try:
+        audio_file.save(str(input_path))
+        
+        # 使用 FFmpeg 轉換
+        cmd = [
+            'ffmpeg', '-y',
+            '-i', str(input_path),
+            '-vn',  # 忽略視訊
+            '-acodec', 'libmp3lame',
+            '-ab', f'{bitrate}k',
+            '-ar', '44100',  # 取樣率
+            '-ac', '2',  # 雙聲道
+            str(output_path)
+        ]
+        
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        
+        if result.returncode != 0:
+            return jsonify({'error': f'轉換失敗: {result.stderr}'}), 500
+        
+        if not output_path.exists():
+            return jsonify({'error': '轉換失敗：輸出檔案不存在'}), 500
+        
+        return send_file(
+            str(output_path),
+            as_attachment=True,
+            download_name=output_filename
+        )
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        # 清理暫存檔案
+        if input_path.exists():
+            input_path.unlink()
+
 # ============ PDF APIs ============
 
 @app.route('/api/pdf/merge', methods=['POST'])

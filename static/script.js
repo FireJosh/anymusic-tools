@@ -435,3 +435,153 @@ function resetTrimmer() {
     currentTimeSpan.textContent = '00:00';
     totalTimeSpan.textContent = '00:00';
 }
+
+// ========================================
+// Audio Converter Functionality
+// ========================================
+
+// Converter DOM Elements
+const convertUploadArea = document.getElementById('convert-upload-area');
+const convertFileInput = document.getElementById('convert-file');
+const convertControls = document.getElementById('convert-controls');
+const convertName = document.getElementById('convert-name');
+const convertSize = document.getElementById('convert-size');
+const convertBtn = document.getElementById('convert-btn');
+const convertProgress = document.getElementById('convert-progress');
+const convertProgressFill = document.getElementById('convert-progress-fill');
+const convertStatus = document.getElementById('convert-status');
+
+// Converter state
+let convertFile = null;
+
+// Only initialize if elements exist
+if (convertUploadArea) {
+    // Upload area click
+    convertUploadArea.addEventListener('click', () => {
+        convertFileInput.click();
+    });
+
+    // Drag and drop
+    convertUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        convertUploadArea.classList.add('dragover');
+    });
+
+    convertUploadArea.addEventListener('dragleave', () => {
+        convertUploadArea.classList.remove('dragover');
+    });
+
+    convertUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        convertUploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleConvertFile(files[0]);
+        }
+    });
+
+    // File input change
+    convertFileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleConvertFile(e.target.files[0]);
+        }
+    });
+
+    // Convert button
+    convertBtn.addEventListener('click', startConversion);
+}
+
+// Handle convert file
+function handleConvertFile(file) {
+    convertFile = file;
+    convertName.textContent = file.name;
+
+    // Format file size
+    const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+    convertSize.textContent = `${sizeInMB} MB`;
+
+    // Show controls
+    convertUploadArea.style.display = 'none';
+    convertControls.classList.remove('hidden');
+}
+
+// Start conversion
+async function startConversion() {
+    if (!convertFile) {
+        showError('請先上傳音訊檔案');
+        return;
+    }
+
+    // Get selected bitrate
+    const bitrateInput = document.querySelector('input[name="bitrate"]:checked');
+    const bitrate = bitrateInput ? bitrateInput.value : '192';
+
+    // Show progress
+    convertProgress.classList.remove('hidden');
+    convertProgressFill.style.width = '0%';
+    convertStatus.textContent = '上傳中...';
+    convertBtn.disabled = true;
+
+    try {
+        const formData = new FormData();
+        formData.append('audio', convertFile);
+        formData.append('bitrate', bitrate);
+
+        convertProgressFill.style.width = '30%';
+        convertStatus.textContent = '轉換中...';
+
+        const response = await fetch('/api/convert-to-mp3', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.error || '轉換失敗');
+        }
+
+        convertProgressFill.style.width = '80%';
+        convertStatus.textContent = '準備下載...';
+
+        // Download the file
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+
+        // Get filename without extension and add .mp3
+        const originalName = convertFile.name;
+        const baseName = originalName.substring(0, originalName.lastIndexOf('.')) || originalName;
+        a.download = `${baseName}.mp3`;
+
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        convertProgressFill.style.width = '100%';
+        convertStatus.textContent = '轉換完成！';
+
+        setTimeout(() => {
+            convertProgress.classList.add('hidden');
+            resetConverter();
+        }, 2000);
+
+    } catch (error) {
+        showError(error.message);
+        convertProgress.classList.add('hidden');
+    } finally {
+        convertBtn.disabled = false;
+    }
+}
+
+// Reset converter
+function resetConverter() {
+    convertFile = null;
+    if (convertUploadArea) {
+        convertUploadArea.style.display = 'flex';
+    }
+    if (convertControls) {
+        convertControls.classList.add('hidden');
+    }
+}

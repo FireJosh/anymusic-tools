@@ -49,3 +49,13 @@ temp/
 # OS
 .DS_Store
 Thumbs.db
+
+# Cookies (sensitive)
+cookies.txt
+
+# Cookie export tools (local use only)
+export_cookies.py
+export_cookies_v2.py
+manual_cookies.py
+test_downloader.py
+test_downloads/
